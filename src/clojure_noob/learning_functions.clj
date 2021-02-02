@@ -158,5 +158,31 @@
 (println (my-if-function-body 100))
 (println (my-if-function-body 1))
 
+; Anonymous functions
+; creating anonymous function using (fn)
+((fn [name]
+   (println "Hi" name "! from anonymous function. :D")) "Noob")
 
+(map (fn [name] (str "Hi, " name))
+     ["Darth Vader" "Mr. Magoo"])
+; => ("Hi, Darth Vader" "Hi, Mr. Magoo")
+
+((fn [x] (* x 3)) 8)
+
+; associating anonymous function to a variable
+(def sum (fn [nums] (map inc nums)))
+
+(sum [1 2 3])
+
+; creating anonymous functions using "#"
+(#(* % 3) 8)
+
+(map #(str "Hi, " %)
+     ["Darth Vader" "Mr. Magoo"])
+
+; passing multiple args while creating fns through "#"
+
+(#(str "Argument 1: " %1 " Argument 2: " %2 " Argument 3: " %3) "OH" "MY" "GOD")
+
+; Returning functions
 
