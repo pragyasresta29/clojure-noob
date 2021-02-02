@@ -32,13 +32,13 @@
 
 ;; multiple assignments
 
-((defn error-message
-   "Dynamic Assignment of values"
-   [severity]
-   (str "OH GOD! It's a disaster! We're "
-        (if severity :mild
-                     "mildly inconvenienced."
-                     "doomed."))))
+(defn error-message
+  "Dynamic Assignment of values"
+  [severity]
+  (str "OH GOD! It's a disaster! We're "
+       (if (= severity :mild)
+         "mildly inconvenienced."
+         "doomed.")))
 
 
 
