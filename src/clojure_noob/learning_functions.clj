@@ -185,4 +185,100 @@
 (#(str "Argument 1: " %1 " Argument 2: " %2 " Argument 3: " %3) "OH" "MY" "GOD")
 
 ; Returning functions
+(defn inc-maker
+  "Create a custom incrementer"
+  [inc-by]
+  #(+ % inc-by))
+
+(def inc3 (inc-maker 3))
+
+(inc3 7)
+
+(def asym-hobbit-body-parts [{:name "head" :size 3}
+                             {:name "left-eye" :size 1}
+                             {:name "left-ear" :size 1}
+                             {:name "mouth" :size 1}
+                             {:name "nose" :size 1}
+                             {:name "neck" :size 2}
+                             {:name "left-shoulder" :size 3}
+                             {:name "left-upper-arm" :size 3}
+                             {:name "chest" :size 10}
+                             {:name "back" :size 10}
+                             {:name "left-forearm" :size 3}
+                             {:name "abdomen" :size 6}
+                             {:name "left-kidney" :size 1}
+                             {:name "left-hand" :size 2}
+                             {:name "left-knee" :size 2}
+                             {:name "left-thigh" :size 4}
+                             {:name "left-lower-leg" :size 3}
+                             {:name "left-achilles" :size 1}
+                             {:name "left-foot" :size 2}])
+
+(defn matching-part
+  [part]
+  {:name (clojure.string/replace (:name part) #"^left-" "right-")
+   :size (:size part)})
+
+(defn symmetrize-body-parts
+  "Accepts seqs of map with keys :name and :size"
+  [parts]
+  (loop [remaining-parts parts final-parts []]
+    (if (empty? remaining-parts)
+      final-parts
+      (let [[part & remaining] remaining-parts]
+        (recur remaining
+               (into final-parts
+                     (set [part (matching-part part)]))))))
+  )
+
+(symmetrize-body-parts asym-hobbit-body-parts)
+
+; implementing above function using reduce
+(defn my-reduce
+  ; accept matching part function, sym list and asym list
+  ([create-matching-part initial remaining-list]
+   (loop [result initial
+          remaining remaining-list]
+     (if (empty? remaining)
+       result
+       (recur (create-matching-part result (first remaining)) (rest remaining)))))
+
+  ; accept matching part function, destructure asym list to
+  ; initial & remaining values
+  ([create-matching-part asym-list]
+   (my-reduce create-matching-part [] asym-list)))
+
+(my-reduce
+  (fn [final-body-parts part]
+    (into final-body-parts (set [part (matching-part part)])))
+  asym-hobbit-body-parts)
+
+(defn better-symmetrize-body-parts
+  "Expects a seq of maps that have a :name and :size"
+  [asym-body-parts]
+  (reduce (fn [final-body-parts part]
+            (into final-body-parts (set [part (matching-part part)])))
+          []
+          asym-body-parts))
+
+(better-symmetrize-body-parts asym-hobbit-body-parts)
+; iteration using loop
+(loop [i 0]
+  (println "i=" i)
+  (if (> i 3)
+    (println "Goodbye!")
+    (recur (inc i)))
+  )
+
+; reduce to sum values
+(reduce + [1 2 3])
+; reduce takes an operator and list as argument
+; it applies the operator to 1st and 2nd element
+; then if applies the operator to the result and next element(3rd element) and so on
+
+; reduce with initial value
+(reduce + 5 [1 2 3])
+; equivalent to 5+1+2+3
+
+
 
