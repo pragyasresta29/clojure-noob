@@ -280,5 +280,26 @@
 (reduce + 5 [1 2 3])
 ; equivalent to 5+1+2+3
 
+;let binds value to a variable within the scope of (let )
 
+(defn hit
+  [asym-body-parts]
+  ; bind sym-body-parts to sym-parts
+  ; bind sum of size of sym-parts to body-part-size-sum
+  ; bind random number within the range of 0-sum to target
+  (let [sym-parts (better-symmetrize-body-parts asym-body-parts)
+        body-part-size-sum (reduce + (map :size sym-parts))
+        target (rand body-part-size-sum)]
+    (loop [[part & remaining] sym-parts
+           accumulated-size (:size part)]
+      (if (> accumulated-size target)
+        part
+        (recur remaining (+ accumulated-size (:size (first remaining))))))))
+
+(loop [x 1]
+  (println x)
+  (if (> x 4)
+    (println "goodbye")
+    (recur (inc x)))
+  )
 
